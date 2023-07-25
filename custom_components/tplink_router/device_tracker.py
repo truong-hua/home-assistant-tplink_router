@@ -78,9 +78,9 @@ class TplinkDeviceScanner(DeviceScanner):
     def get_device_name(self, device):
         """Support for device name feature. (only implemented in XDR Series)"""
         
-        if device:
+        """if device:
             self._get_device_name()
-            return self.mac2name.get(device)
+            return self.mac2name.get(device)"""
     
         return None
 
