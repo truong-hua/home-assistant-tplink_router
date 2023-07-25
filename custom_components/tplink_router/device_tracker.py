@@ -391,8 +391,8 @@ class C7TplinkDeviceScanner(TplinkDeviceScanner):
 
         mac_results = []
 
-        # Check both the 2.4GHz and 5GHz client list URLs
-        for clients_url in ('WlanStationRpm.htm', 'WlanStationRpm_5g.htm'):
+        # Check both the 2.4GHz and 5GHz client list and DHCP client list URLs
+        for clients_url in ('WlanStationRpm.htm', 'WlanStationRpm_5g.htm', 'AssignedIpAddrListRpm.htm'):
             url = 'http://{}/{}/userRpm/{}' \
                 .format(self.host, self.token, clients_url)
             referer = 'http://{}'.format(self.host)
@@ -406,6 +406,8 @@ class C7TplinkDeviceScanner(TplinkDeviceScanner):
 
         if not mac_results:
             return False
+
+        mac_results = list(set(mac_results))
 
         self.last_results = [mac.replace("-", ":") for mac in mac_results]
         return True
