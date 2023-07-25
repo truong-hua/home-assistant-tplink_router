@@ -396,6 +396,8 @@ class C7TplinkDeviceScanner(TplinkDeviceScanner):
             })
             mac_results.extend(self.parse_macs_hyphens.findall(page.text))
 
+        self._log_out()
+
         if not mac_results:
             return False
 
@@ -404,6 +406,21 @@ class C7TplinkDeviceScanner(TplinkDeviceScanner):
         self.last_results = [mac.replace("-", ":") for mac in mac_results]
         return True
 
+    def _log_out(self):
+        _LOGGER.info("Logging out of router admin interface...")
+
+        if (self.credentials == '') or (self.token == ''):
+            self._get_auth_tokens()
+
+        url = 'http://{}/{}/userRpm/LogoutRpm.htm' \
+            .format(self.host, self.token)
+        referer = 'http://{}'.format(self.host)
+        cookie = 'Authorization=Basic {}'.format(self.credentials)
+
+        requests.get(url, headers={
+            'Cookie': cookie,
+            'Referer': referer,
+        })
 
 class EAP225TplinkDeviceScanner(TplinkDeviceScanner):
     """This class queries a TP-Link EAP-225 AP with newer TP-Link FW."""
